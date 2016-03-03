@@ -1,20 +1,88 @@
 <template>
   <section class="au-animate">
-    <h2>${heading}</h2>
-    <form role="form" submit.delegate="submit()">
-      <div class="form-group">
-        <label for="fn">First Name</label>
-        <input type="text" value.bind="firstName" class="form-control" id="fn" placeholder="first name">
+    <div class="col-sm-offset-2 col-sm-8">
+      <div class="row">
+        <h2 class="text-">Bảng tính giá</h2>
       </div>
-      <div class="form-group">
-        <label for="ln">Last Name</label>
-        <input type="text" value.bind="lastName" class="form-control" id="ln" placeholder="last name">
+
+      <div class="row">
+        <form submit.delegate="addProduct()">
+          <div class="panel panel-info">
+            <div class="panel-heading"> 
+              <h3 class="panel-title">Thêm mặt hàng</h3>
+            </div>
+            <div class="panel-body">
+              <div class="col-sm-3">
+                <label>Tên mặt hàng</label>
+                <select class="form-control" value.bind="product.id" change.delegate="productSelectChange($event)">
+                  <option>Hãy chọn một mặt hàng</option>
+                  <option repeat.for="baseProduct of baseProducts" value.bind="baseProduct.id" model.bind="baseProduct.id" >${baseProduct.name}</option>
+                </select>
+              </div>
+              <div class="col-sm-3">
+                <label>Đơn vị tính</label>
+                <input class="form-control" disabled value.bind="product.unit"/>
+              </div>
+              <div class="col-sm-3">
+                <label>Số lượng</label>
+                <input class="form-control" value.bind="product.quantity"/>
+              </div>
+              <div class="col-sm-3">
+                <label>Giá tiền</label>
+                <input class="form-control" value.bind="product.price"/>
+              </div>
+            </div>
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="pull-right">
+                    <button type="submit" class="btn btn-success">
+                    <i class="fa fa-plus"></i>
+                    Thêm
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+       
       </div>
-      <div class="form-group">
-        <label>Full Name</label>
-        <p class="help-block">${fullName | upper}</p>
+      <div class="row">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <th>#</th>
+              <th>Tên mặt hàng</th>
+              <th>Đơn vị tính</th>
+              <th class="text-right" >Số lượng</th>
+              <th class="text-right" >Giá tiền</th>
+              <th class="text-right" >Thành Tiền</th>
+              <th></th>
+            </thead>
+            <tbody>
+              <tr repeat.for="product of products">
+                <td style="vertical-align: middle;">${$index + 1}</td>
+                <td style="vertical-align: middle;">${product.name}</td>
+                <td style="vertical-align: middle;">${product.unit}</td>
+                <td style="vertical-align: middle;" class="text-right">${product.quantity}</td>
+                <td style="vertical-align: middle;" class="text-right">${product.price | moneyToNumber}</td>
+                <td style="vertical-align: middle;" class="text-right">${product.quantity * product.price | moneyToNumber}</td>
+                <td>
+                  <button class="btn btn-danger" click.trigger="deleteProduct(product)">
+                    <i class="fa fa-trash-o"></i>
+                    Xoá
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" class="text-right"><strong>Tổng tiền:</strong></td>
+                <td colspan="2" class="text-right"><strong>${totalPrice | moneyToNumber}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
-    </form>
+    </div>
   </section>
 </template>
